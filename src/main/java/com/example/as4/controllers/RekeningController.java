@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -18,31 +19,34 @@ public class RekeningController {
 
     @Autowired
     RekeningService rekeningService;
+    @Autowired
+    Response response;
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('READ')")
     public ResponseEntity<?> rekeningList(@PageableDefault(page = 0, size = 20) Pageable pageable){
 
-        return ResponseEntity.ok(new Response(rekeningService.rekeningList(pageable), "success"));
+        return ResponseEntity.ok(response.sukses(rekeningService.rekeningList(pageable)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> rekeningDetail(@PathVariable Long id){
-        return ResponseEntity.ok(new Response(rekeningService.rekeningDetail(id), "success"));
+        return ResponseEntity.ok(response.sukses(rekeningService.rekeningDetail(id)));
     }
 
     @PostMapping("/save")
     public ResponseEntity<?> rekeningSave(@RequestBody RekeningRequest request) throws ParseException {
-        return ResponseEntity.ok(new Response(rekeningService.createRekening(request), "success"));
+        return ResponseEntity.ok(response.sukses(rekeningService.createRekening(request)));
     }
 
     @PutMapping("/save")
     public ResponseEntity<?> rekeningUpdate(@RequestBody RekeningRequest request) throws ParseException {
-        return ResponseEntity.ok(new Response(rekeningService.saveRekening(request), "success"));
+        return ResponseEntity.ok(response.sukses(rekeningService.saveRekening(request)));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> rekeningDelete(@RequestBody DeleteRequest request){
-        return ResponseEntity.ok(new Response(rekeningService.deleteRekening(request), "success"));
+        return ResponseEntity.ok(response.sukses(rekeningService.deleteRekening(request)));
     }
 
 }

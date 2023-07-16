@@ -1,7 +1,7 @@
 package com.example.as4.models;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 public class Test {

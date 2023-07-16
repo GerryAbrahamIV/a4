@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -28,31 +29,34 @@ public class KaryawanController {
 
     @Autowired
     KaryawanService karyawanService;
+    @Autowired
+    Response response;
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('READ')")
     public ResponseEntity<?> karyawanList(@PageableDefault(page = 0, size = 20) Pageable pageable){
 
-        return ResponseEntity.ok(new Response(karyawanService.karyawanList(pageable), "success"));
+        return ResponseEntity.ok(response.sukses(karyawanService.karyawanList(pageable)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> karyawanDetail(@PathVariable Long id){
-        return ResponseEntity.ok(new Response(karyawanService.karyawanDetail(id), "success"));
+        return ResponseEntity.ok(response.sukses(karyawanService.karyawanDetail(id)));
     }
 
     @PostMapping("/save")
     public ResponseEntity<?> karyawanSave(@RequestBody KaryawanRequest request) throws ParseException {
-        return ResponseEntity.ok(new Response(karyawanService.createKaryawan(request), "success"));
+        return ResponseEntity.ok(response.sukses(karyawanService.createKaryawan(request)));
     }
 
     @PutMapping("/save")
     public ResponseEntity<?> karyawanUpdate(@RequestBody KaryawanRequest request) throws ParseException {
-        return ResponseEntity.ok(new Response(karyawanService.saveKaryawan(request), "success"));
+        return ResponseEntity.ok(response.sukses(karyawanService.saveKaryawan(request)));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> karyawanDelete(@RequestBody DeleteRequest request){
-        return ResponseEntity.ok(new Response(karyawanService.deleteKaryawan(request), "success"));
+        return ResponseEntity.ok(response.sukses(karyawanService.deleteKaryawan(request)));
     }
 
 /*
